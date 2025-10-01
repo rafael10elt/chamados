@@ -70,7 +70,27 @@
         <nav class="mb-8 p-2 glass-effect rounded-lg flex items-center justify-center sm:justify-start gap-2 flex-wrap"><button id="pageAtendenteBtn" class="page-btn page-btn-active">Atendente</button><button id="pageChamadosBtn" class="page-btn">Chamados</button><button id="pageDashboardBtn" class="page-btn">Dashboard</button></nav>
         <main id="app-content">
             <div id="atendentePage"><div class="glass-effect rounded-lg"><div class="p-4 flex justify-between items-center border-b" style="border-color: var(--border-color);"><h2 class="text-xl font-semibold font-orbitron">Atendimento via Chatbot</h2><button id="reiniciarChatBtn" class="bg-blue-600 text-white px-3 py-1.5 rounded-md font-semibold hover:bg-blue-700 transition">Reiniciar Chat</button></div><div class="p-4"><iframe id="typebot-iframe" src="https://lumitechia-typebot-viewer.aeenwc.easypanel.host/abertura-de-chamado" class="w-full h-[70vh] rounded-lg" style="border:0;"></iframe></div></div></div>
-            <div id="chamadosPage" class="hidden"><div class="glass-effect p-4 sm:p-6 rounded-lg"><div class="flex flex-col sm:flex-row justify-between items-center mb-5 gap-4 flex-wrap"><div class="flex flex-col sm:flex-row sm:flex-wrap items-center gap-2 w-full flex-grow"><input type="search" id="searchChamadoInput" placeholder="Pesquisar por cliente..." class="custom-input sm:w-auto flex-grow"><select id="filterTipo" class="custom-select sm:w-auto flex-grow-0"><option value="todos">Todos os Tipos</option><option>Vendas</option><option>Suporte Técnico</option><option>Financeiro</option><option>Outros</option></select><select id="filterStatus" class="custom-select sm:w-auto flex-grow-0"><option value="todos">Todos Status</option><option>Pendente</option><option>Em Andamento</option><option>Resolvido</option></select></div><div class="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto"><div id="viewToggleButtons" class="flex items-center gap-1 rounded-md p-1" style="background-color: var(--btn-bg);"><button id="viewListBtn" class="view-btn view-btn-active">Lista</button><button id="viewKanbanBtn" class="view-btn">Kanban</button></div><button id="addChamadoBtn" class="w-full sm:w-auto flex-shrink-0 bg-blue-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-blue-700 transition">Novo Chamado</button></div></div>
+            <div id="chamadosPage" class="hidden">
+                <div class="glass-effect p-4 sm:p-6 rounded-lg">
+                    <!-- MODIFICADO: Adicionado filtro por código e botão de atualizar -->
+                    <div class="flex flex-col sm:flex-row justify-between items-center mb-5 gap-4 flex-wrap">
+                        <div class="flex flex-col sm:flex-row sm:flex-wrap items-center gap-2 w-full flex-grow">
+                            <input type="search" id="searchCodigoChamadoInput" placeholder="Pesquisar por Cód. Chamado..." class="custom-input sm:w-auto flex-grow">
+                            <input type="search" id="searchChamadoInput" placeholder="Pesquisar por cliente..." class="custom-input sm:w-auto flex-grow">
+                            <select id="filterTipo" class="custom-select sm:w-auto flex-grow-0"><option value="todos">Todos os Tipos</option><option>Vendas</option><option>Suporte Técnico</option><option>Financeiro</option><option>Outros</option></select>
+                            <select id="filterStatus" class="custom-select sm:w-auto flex-grow-0"><option value="todos">Todos Status</option><option>Pendente</option><option>Em Andamento</option><option>Resolvido</option></select>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+                            <div id="viewToggleButtons" class="flex items-center gap-1 rounded-md p-1" style="background-color: var(--btn-bg);"><button id="viewListBtn" class="view-btn view-btn-active">Lista</button><button id="viewKanbanBtn" class="view-btn">Kanban</button></div>
+                            <button id="updateListBtn" class="w-full sm:w-auto flex-shrink-0 bg-gray-600 text-white px-3 py-2 rounded-md font-semibold hover:bg-gray-700 transition" title="Atualizar Lista">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="pointer-events-none" viewBox="0 0 16 16">
+                                  <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
+                                  <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+                                </svg>
+                            </button>
+                            <button id="addChamadoBtn" class="w-full sm:w-auto flex-shrink-0 bg-blue-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-blue-700 transition">Novo Chamado</button>
+                        </div>
+                    </div>
                     <div id="listViewContainer"><div class="overflow-x-auto"><table class="min-w-full"><thead class="border-b" style="border-color: var(--border-color);"><tr><th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Cód. Chamado</th><th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Cliente</th><th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Tipo</th><th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">Data Abertura</th><th class="px-4 py-3 text-center text-xs font-medium uppercase tracking-wider">Tempo p/ Resolução</th><th class="px-4 py-3 text-center text-xs font-medium uppercase tracking-wider">Status</th><th class="px-4 py-3 text-center text-xs font-medium uppercase tracking-wider">Ações</th></tr></thead><tbody id="chamadosList"></tbody></table></div></div>
                     <div id="kanbanViewContainer" class="hidden"><div class="grid grid-cols-1 md:grid-cols-3 gap-6"><div class="kanban-column" data-status="Pendente"><h2 class="kanban-header-pendente text-lg font-semibold p-3 rounded-t-lg text-center">Pendente</h2><div id="kanban-col-pendente" class="p-3 space-y-4 rounded-b-lg border border-t-0" style="border-color: var(--border-color);"></div></div><div class="kanban-column" data-status="Em Andamento"><h2 class="kanban-header-andamento text-lg font-semibold p-3 rounded-t-lg text-center">Em Andamento</h2><div id="kanban-col-andamento" class="p-3 space-y-4 rounded-b-lg border border-t-0" style="border-color: var(--border-color);"></div></div><div class="kanban-column" data-status="Resolvido"><h2 class="kanban-header-resolvido text-lg font-semibold p-3 rounded-t-lg text-center">Resolvido</h2><div id="kanban-col-resolvido" class="p-3 space-y-4 rounded-b-lg border border-t-0" style="border-color: var(--border-color);"></div></div></div></div>
                 </div>
@@ -88,31 +108,11 @@
     </div>
 
     <!-- MODAIS -->
-    <div id="addEditModal" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center hidden z-50 p-4">
-        <div class="glass-effect p-8 rounded-lg shadow-2xl w-full max-w-lg">
-            <h2 id="modalTitle" class="text-2xl font-semibold mb-5 font-orbitron" style="color: var(--text-title);"></h2>
-            <form id="addEditForm" class="space-y-4">
-                <input type="hidden" id="edit-id">
-                <!-- REMOVIDO: Campo codigoCliente do formulário -->
-                <div>
-                    <label class="modal-label block text-sm font-medium">Nome do Cliente</label>
-                    <input type="text" id="edit-nomeCliente" required class="custom-input mt-1">
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div><label class="modal-label block text-sm font-medium">Telefone</label><input type="tel" id="edit-telefone" class="custom-input mt-1"></div>
-                    <div><label class="modal-label block text-sm font-medium">E-mail</label><input type="email" id="edit-email" class="custom-input mt-1"></div>
-                </div>
-                <div><label class="modal-label block text-sm font-medium">Tipo de Chamado</label><select id="edit-tipo" required class="custom-select mt-1"><option>Vendas</option><option>Suporte Técnico</option><option>Financeiro</option><option>Outros</option></select></div>
-                <div><label class="modal-label block text-sm font-medium">Descrição</label><textarea id="edit-descricao" required class="custom-textarea mt-1" rows="4"></textarea></div>
-                <div class="flex gap-4 pt-4"><button type="button" id="cancelEdit" class="w-full justify-center py-2 px-4 border rounded-md shadow-sm text-sm" style="border-color: var(--input-border); color: var(--text-primary); background-color: var(--btn-bg);">Cancelar</button><button type="submit" class="w-full justify-center py-2 px-4 border-transparent rounded-md shadow-sm text-sm text-white bg-blue-600 hover:bg-blue-700">Salvar</button></div>
-            </form>
-        </div>
-    </div>
+    <div id="addEditModal" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center hidden z-50 p-4"><div class="glass-effect p-8 rounded-lg shadow-2xl w-full max-w-lg"><h2 id="modalTitle" class="text-2xl font-semibold mb-5 font-orbitron" style="color: var(--text-title);"></h2><form id="addEditForm" class="space-y-4"><input type="hidden" id="edit-id"><div><label class="modal-label block text-sm font-medium">Nome do Cliente</label><input type="text" id="edit-nomeCliente" required class="custom-input mt-1"></div><div class="grid grid-cols-1 sm:grid-cols-2 gap-4"><div><label class="modal-label block text-sm font-medium">Telefone</label><input type="tel" id="edit-telefone" class="custom-input mt-1"></div><div><label class="modal-label block text-sm font-medium">E-mail</label><input type="email" id="edit-email" class="custom-input mt-1"></div></div><div><label class="modal-label block text-sm font-medium">Tipo de Chamado</label><select id="edit-tipo" required class="custom-select mt-1"><option>Vendas</option><option>Suporte Técnico</option><option>Financeiro</option><option>Outros</option></select></div><div><label class="modal-label block text-sm font-medium">Descrição</label><textarea id="edit-descricao" required class="custom-textarea mt-1" rows="4"></textarea></div><div class="flex gap-4 pt-4"><button type="button" id="cancelEdit" class="w-full justify-center py-2 px-4 border rounded-md shadow-sm text-sm" style="border-color: var(--input-border); color: var(--text-primary); background-color: var(--btn-bg);">Cancelar</button><button type="submit" class="w-full justify-center py-2 px-4 border-transparent rounded-md shadow-sm text-sm text-white bg-blue-600 hover:bg-blue-700">Salvar</button></div></form></div></div>
     <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center hidden z-50"><div class="glass-effect p-8 rounded-lg shadow-2xl w-full max-w-md text-center"><h2 class="text-2xl font-semibold mb-5 text-yellow-400 font-orbitron">Confirmar Exclusão</h2><p class="mb-6">Tem certeza de que deseja apagar este chamado? Esta ação não pode ser desfeita.</p><div class="flex gap-4 pt-4"><button type="button" id="cancelDelete" class="w-full justify-center py-2 px-4 border rounded-md shadow-sm text-sm" style="border-color: var(--input-border); color: var(--text-primary); background-color: var(--btn-bg);">Cancelar</button><button type="button" id="confirmDelete" class="w-full justify-center py-2 px-4 border-transparent rounded-md shadow-sm text-sm text-white bg-red-600 hover:bg-red-700">Apagar</button></div></div></div>
     <div id="logoutModal" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center hidden z-50"><div class="glass-effect p-8 rounded-lg shadow-2xl w-full max-w-md text-center"><h2 class="text-2xl font-semibold mb-5 font-orbitron">Sair do Sistema</h2><p class="mb-6">Tem certeza de que deseja sair?</p><div class="flex gap-4 pt-4"><button type="button" id="cancelLogout" class="w-full justify-center py-2 px-4 border rounded-md shadow-sm text-sm" style="border-color: var(--input-border); color: var(--text-primary); background-color: var(--btn-bg);">Cancelar</button><button type="button" id="confirmLogout" class="w-full justify-center py-2 px-4 border-transparent rounded-md shadow-sm text-sm text-white bg-red-600 hover:bg-red-700">Sair</button></div></div></div>
     <div id="detailsModal" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center hidden z-50 p-4"><div class="glass-effect p-8 rounded-lg shadow-2xl w-full max-w-2xl"><h2 class="text-2xl font-semibold mb-5 font-orbitron" style="color: var(--text-title);">Detalhes do Chamado</h2><div id="detailsModalContent" class="space-y-3 text-sm max-h-[60vh] overflow-y-auto pr-2"></div><div class="flex justify-end gap-4 pt-6"><button type="button" id="closeDetailsModalBtn" class="w-full sm:w-auto justify-center py-2 px-4 border rounded-md shadow-sm text-sm" style="border-color: var(--input-border); color: var(--text-primary); background-color: var(--btn-bg);">Fechar</button></div></div></div>
     <div id="reportModal" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center hidden z-50 p-4"><div class="glass-effect p-8 rounded-lg shadow-2xl w-full max-w-lg"><h2 class="text-2xl font-semibold mb-5 font-orbitron" style="color: var(--text-title);">Gerar Relatório de Chamados</h2><form id="reportForm" class="space-y-4"><div class="grid grid-cols-1 sm:grid-cols-2 gap-4"><div><label class="modal-label block text-sm font-medium">Data Inicial</label><input type="date" id="reportStartDate" class="custom-input mt-1" required></div><div><label class="modal-label block text-sm font-medium">Data Final</label><input type="date" id="reportEndDate" class="custom-input mt-1" required></div></div><div><label class="modal-label block text-sm font-medium">Filtrar por Tipo</label><select id="reportTypeFilter" class="custom-select mt-1"><option value="todos">Todos os Tipos</option><option>Vendas</option><option>Suporte Técnico</option><option>Financeiro</option><option>Outros</option></select></div><div><label class="modal-label block text-sm font-medium">Filtrar por Status</label><select id="reportStatusFilter" class="custom-select mt-1"><option value="todos">Todos os Status</option><option>Pendente</option><option>Em Andamento</option><option>Resolvido</option></select></div><div class="flex gap-4 pt-4"><button type="button" id="cancelReportBtn" class="w-full justify-center py-2 px-4 border rounded-md" style="border-color: var(--input-border); color: var(--text-primary); background-color: var(--btn-bg);">Cancelar</button><button type="submit" class="w-full justify-center py-2 px-4 border-transparent rounded-md text-white bg-blue-600 hover:bg-blue-700">Gerar PDF</button></div></form></div></div>
-    
 <script type="module">
     const { jsPDF } = window.jspdf;
     
@@ -121,23 +121,22 @@
     
     // --- Conexão com NocoDB ---
     const NOCODB_HOST = "https://lumitechia-nocodb.aeenwc.easypanel.host";
-    const NOCODB_TOKEN = "3w6jCF_D4pXQ6ozjHXZlJL5mbnSNlKVWht_PpoP9";
-    // MODIFICADO: Nome do projeto inserido corretamente
-    const NOCODB_API_URL = `${NOCODB_HOST}/api/v1/db/data/v1/Portfolio/Chamados`;
+    const NOCODB_TOKEN = "nnc9EQpr4VR2l4n4kUTpFd_RyPABQoa1cyYfiJMd";
+    // CORREÇÃO CRÍTICA: Usando o ID da Tabela na URL, conforme exigido pela API.
+    const NOCODB_API_URL = `${NOCODB_HOST}/api/v1/db/data/v1/Portfolio/meqcabqz2hx20pp`;
 
     const api = {
         async getChamados() {
             try {
-                const response = await fetch(NOCODB_API_URL, {
+                const response = await fetch(`${NOCODB_API_URL}?limit=1000`, {
                     headers: { 'xc-token': NOCODB_TOKEN }
                 });
-                if (!response.ok) throw new Error(`Erro na API: ${response.statusText}`);
+                if (!response.ok) throw new Error(`${response.status}: ${response.statusText}`);
                 const data = await response.json();
-                // Mapeia 'Id' (NocoDB) para 'id' (aplicação)
                 return { list: data.list.map(item => ({...item, id: item.Id})) };
             } catch (error) {
                 console.error("Erro ao buscar chamados:", error);
-                alert("Falha ao carregar dados do NocoDB. Verifique a console para mais detalhes.");
+                alert(`Falha ao carregar dados do NocoDB. ${error.message}`);
                 return { list: [] };
             }
         },
@@ -148,49 +147,55 @@
                     headers: { 'Content-Type': 'application/json', 'xc-token': NOCODB_TOKEN },
                     body: JSON.stringify(data)
                 });
-                if (!response.ok) throw new Error(`Erro na API: ${response.statusText}`);
+                if (!response.ok) throw new Error(`${response.status}: ${response.statusText}`);
                 return await response.json();
             } catch (error) {
                 console.error("Erro ao criar chamado:", error);
-                alert("Falha ao criar chamado. Verifique a console para mais detalhes.");
+                alert(`Falha ao criar chamado. ${error.message}`);
             }
         },
-        async patchChamado(id, data) {
-             try {
-                const chamadoAtual = allChamados.find(c => c.id === id);
-                if (data.status === 'Resolvido' && !chamadoAtual.dataConclusao) {
-                    data.dataConclusao = new Date().toISOString();
-                }
-                if(data.status !== 'Resolvido') {
-                    data.dataConclusao = null;
-                }
+        // DENTRO DO OBJETO 'api'
 
-                const response = await fetch(NOCODB_API_URL, {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json', 'xc-token': NOCODB_TOKEN },
-                    body: JSON.stringify({ Id: id, ...data }) // NocoDB espera 'Id' maiúsculo
-                });
-                if (!response.ok) throw new Error(`Erro na API: ${response.statusText}`);
-                return await response.json();
-            } catch (error) {
-                console.error("Erro ao atualizar chamado:", error);
-                alert("Falha ao atualizar chamado. Verifique a console para mais detalhes.");
-            }
-        },
-        async deleteChamado(id) {
-            try {
-                const response = await fetch(NOCODB_API_URL, {
-                    method: 'DELETE',
-                    headers: { 'Content-Type': 'application/json', 'xc-token': NOCODB_TOKEN },
-                    body: JSON.stringify({ Id: id }) // NocoDB espera 'Id' maiúsculo
-                });
-                if (!response.ok) throw new Error(`Erro na API: ${response.statusText}`);
-                return await response.json();
-            } catch (error) {
-                console.error("Erro ao deletar chamado:", error);
-                alert("Falha ao deletar chamado. Verifique a console para mais detalhes.");
-            }
+async patchChamado(id, data) {
+     try {
+        // URL CORRIGIDA: Adiciona o ID do registro ao final da URL
+        const response = await fetch(`${NOCODB_API_URL}/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json', 'xc-token': NOCODB_TOKEN },
+            // CORPO CORRIGIDO: Envia apenas os dados a serem atualizados
+            body: JSON.stringify(data)
+        });
+        if (!response.ok) {
+            const errorBody = await response.json();
+            console.error("Erro na API (patchChamado):", response.statusText, errorBody);
+            throw new Error(`${response.status}: ${errorBody.msg}`);
         }
+        return await response.json();
+    } catch (error) {
+        console.error("Erro ao atualizar chamado:", error);
+        alert(`Falha ao atualizar chamado. ${error.message}`);
+        throw error;
+    }
+},
+async deleteChamado(id) {
+    try {
+        // URL CORRIGIDA: Adiciona o ID do registro ao final da URL
+        const response = await fetch(`${NOCODB_API_URL}/${id}`, {
+            method: 'DELETE',
+            headers: { 'xc-token': NOCODB_TOKEN }
+            // CORPO CORRIGIDO: Removido, pois o ID já está na URL
+        });
+        if (!response.ok) {
+             const errorBody = await response.json();
+            console.error("Erro na API (deleteChamado):", response.statusText, errorBody);
+            throw new Error(`Erro na API DELETE: ${errorBody.msg}`);
+        }
+        return { success: true }; 
+    } catch (error) {
+        console.error("Erro ao deletar chamado:", error);
+        alert(`Falha ao deletar chamado. ${error.message}`);
+    }
+}
     };
 
     let allChamados = [];
@@ -203,7 +208,7 @@
     const addEditModal = document.getElementById('addEditModal'), modalTitle = document.getElementById('modalTitle'), addEditForm = document.getElementById('addEditForm'), cancelEdit = document.getElementById('cancelEdit');
     const deleteModal = document.getElementById('deleteModal'), cancelDelete = document.getElementById('cancelDelete'), confirmDelete = document.getElementById('confirmDelete');
     const chamadosList = document.getElementById('chamadosList');
-    const searchChamadoInput = document.getElementById('searchChamadoInput'), filterTipo = document.getElementById('filterTipo'), filterStatus = document.getElementById('filterStatus');
+    const searchCodigoChamadoInput = document.getElementById('searchCodigoChamadoInput'), searchChamadoInput = document.getElementById('searchChamadoInput'), filterTipo = document.getElementById('filterTipo'), filterStatus = document.getElementById('filterStatus');
     const loginPage = document.getElementById('loginPage'), appWrapper = document.getElementById('app-wrapper'), loginForm = document.getElementById('loginForm'), logoutBtn = document.getElementById('logoutBtn');
     const logoutModal = document.getElementById('logoutModal'), cancelLogout = document.getElementById('cancelLogout'), confirmLogout = document.getElementById('confirmLogout');
     const viewListBtn = document.getElementById('viewListBtn'), viewKanbanBtn = document.getElementById('viewKanbanBtn');
@@ -215,7 +220,8 @@
     const dashboardFilterButtons = document.getElementById('dashboardFilterButtons');
     const generateReportBtn = document.getElementById('generateReportBtn'), reportModal = document.getElementById('reportModal'), reportForm = document.getElementById('reportForm'), cancelReportBtn = document.getElementById('cancelReportBtn');
     const reiniciarChatBtn = document.getElementById('reiniciarChatBtn');
-
+    const updateListBtn = document.getElementById('updateListBtn');
+    
     const getStatusInfo = (status) => { switch (status) { case 'Resolvido': return { text: 'Resolvido', class: 'status-resolvido' }; case 'Em Andamento': return { text: 'Em Andamento', class: 'status-andamento' }; case 'Pendente': default: return { text: 'Pendente', class: 'status-pendente' }; } };
     const generateChamadoCode = () => `LUMI-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
     const calculateResolutionTime = (startDate, endDate, returnRawDays = false) => { if (!endDate) return returnRawDays ? null : 'N/A'; const start = new Date(startDate); const end = new Date(endDate); const diffTime = Math.abs(end - start); const diffDays = diffTime / (1000 * 60 * 60 * 24); if(returnRawDays) return diffDays; if (diffDays < 1) return '< 1 dia'; const roundedDays = Math.ceil(diffDays); return `${roundedDays} dia${roundedDays > 1 ? 's' : ''}`; };
@@ -242,7 +248,7 @@
                             <option value="Em Andamento" ${c.status === 'Em Andamento' ? 'selected' : ''}>Em Andamento</option>
                             <option value="Resolvido" ${c.status === 'Resolvido' ? 'selected' : ''}>Resolvido</option>
                         </select>
-                        ${c.telefone ? `<a href="https://wa.me/55${c.telefone.replace(/\\D/g, '')}" target="_blank" class="action-btn" title="WhatsApp"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="text-green-500" viewBox="0 0 16 16"><path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943s-.182-.15-.38-.25"/></svg></a>` : ''}
+                        ${c.telefone ? `<a href="https://wa.me/55${c.telefone.replace(/\D/g, '')}" target="_blank" class="action-btn" title="WhatsApp"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="text-green-500" viewBox="0 0 16 16"><path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943s-.182-.15-.38-.25"/></svg></a>` : ''}
                         <button class="action-btn view-details-btn" data-id="${c.id}" title="Ver Detalhes"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="pointer-events-none text-gray-400" viewBox="0 0 16 16"><path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/><path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/></svg></button>
                         <button class="action-btn edit-btn" data-item='${JSON.stringify(c)}' title="Editar"><svg class="pointer-events-none text-blue-400" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V12h2.293z"/></svg></button>
                         <button class="action-btn delete-btn" data-id="${c.id}" title="Apagar"><svg class="pointer-events-none text-red-400" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/></svg></button>
@@ -253,71 +259,64 @@
     };
     
     const renderKanbanView = (chamados) => {
-        kanbanColPendente.innerHTML = '';
-        kanbanColAndamento.innerHTML = '';
-        kanbanColResolvido.innerHTML = '';
-        chamados.forEach(c => {
-            const statusInfo = getStatusInfo(c.status);
-            const resolutionTime = calculateResolutionTime(c.dataAbertura, c.dataConclusao);
-            const cardHTML = `
-                <div class="kanban-card glass-effect p-4 rounded-lg space-y-2" draggable="true" data-id="${c.id}">
-                    <div class="flex justify-between items-start">
-                        <div class="flex items-center gap-2">
-                            <span class="text-xs font-mono">${c.codigoChamado}</span>
-                            <span class="status-badge ${statusInfo.class}" style="font-size: 0.65rem; padding: 2px 6px;">${c.tipo}</span>
-                        </div>
-                        <div class="flex items-center gap-1">
-                            ${c.telefone ? `<a href="https://wa.me/55${c.telefone.replace(/\\D/g, '')}" target="_blank" class="action-btn" title="WhatsApp"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="text-green-500" viewBox="0 0 16 16"><path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943s-.182-.15-.38-.25"/></svg></a>` : ''}
+        const pendentes = chamados.filter(c => c.status === 'Pendente');
+        const emAndamento = chamados.filter(c => c.status === 'Em Andamento');
+        const resolvidos = chamados.filter(c => c.status === 'Resolvido');
+
+        document.querySelector('.kanban-column[data-status="Pendente"] h2').textContent = `Pendente (${pendentes.length})`;
+        document.querySelector('.kanban-column[data-status="Em Andamento"] h2').textContent = `Em Andamento (${emAndamento.length})`;
+        document.querySelector('.kanban-column[data-status="Resolvido"] h2').textContent = `Resolvido (${resolvidos.length})`;
+
+        const renderColumn = (columnEl, chamados) => {
+            columnEl.innerHTML = chamados.map(c => {
+                const statusInfo = getStatusInfo(c.status);
+                const resolutionTime = calculateResolutionTime(c.dataAbertura, c.dataConclusao);
+                return `
+                    <div class="kanban-card glass-effect p-4 rounded-lg space-y-2" draggable="true" data-id="${c.id}">
+                        <div class="flex justify-between items-start">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-mono">${c.codigoChamado}</span>
+                                <span class="status-badge ${statusInfo.class}" style="font-size: 0.65rem; padding: 2px 6px;">${c.tipo}</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                ${c.telefone ? `<a href="https://wa.me/55${c.telefone.replace(/\D/g, '')}" target="_blank" class="action-btn" title="WhatsApp"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="text-green-500" viewBox="0 0 16 16"><path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943s-.182-.15-.38-.25"/></svg></a>` : ''}
                             <button class="action-btn view-details-btn" data-id="${c.id}" title="Ver Detalhes"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="pointer-events-none text-gray-400" viewBox="0 0 16 16"><path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/><path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/></svg></button>
                         </div>
                     </div>
                     <p class="font-semibold">${c.nomeCliente}</p>
                     ${c.dataConclusao ? `<p class="text-xs text-green-400">Resolvido em: ${resolutionTime}</p>` : `<p class="text-xs text-gray-400">Aberto em: ${new Date(c.dataAbertura).toLocaleDateString('pt-BR')}</p>`}
                 </div>`;
-            if (c.status === 'Pendente') kanbanColPendente.innerHTML += cardHTML;
-            else if (c.status === 'Em Andamento') kanbanColAndamento.innerHTML += cardHTML;
-            else if (c.status === 'Resolvido') kanbanColResolvido.innerHTML += cardHTML;
-        });
+            }).join('');
+        };
+        
+        renderColumn(kanbanColPendente, pendentes);
+        renderColumn(kanbanColAndamento, emAndamento);
+        renderColumn(kanbanColResolvido, resolvidos);
     };
     
-    const renderDashboard = (chamados) => {
-        const resolvidos = chamados.filter(c => c.status === 'Resolvido');
-        const pendentes = chamados.filter(c => c.status !== 'Resolvido');
-        document.getElementById('kpiTotalChamados').textContent = chamados.length;
-        document.getElementById('kpiResolvidos').textContent = resolvidos.length;
-        document.getElementById('kpiPendentes').textContent = pendentes.length;
-        const tempos = resolvidos.map(c => calculateResolutionTime(c.dataAbertura, c.dataConclusao, true)).filter(t => t !== null);
-        const tempoMedio = tempos.length > 0 ? (tempos.reduce((a, b) => a + b, 0) / tempos.length).toFixed(1) : 0;
-        document.getElementById('kpiTempoMedio').textContent = `${tempoMedio} dias`;
-        const renderChart = (id, type, data, options) => {
-            if (charts[id]) charts[id].destroy();
-            const ctx = document.getElementById(id);
-            if (ctx) { charts[id] = new Chart(ctx.getContext('2d'), { type, data, options }); }
-        };
-        const chartColors = ['#00d4ff', '#ff6b35', '#22c55e', '#facc15', '#a855f7', '#ec4899'];
-        const chartOptions = (isDarkMode) => ({ responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: isDarkMode ? '#e2e8f0' : '#475569' } } } });
-        const porTipo = chamados.reduce((acc, c) => { acc[c.tipo] = (acc[c.tipo] || 0) + 1; return acc; }, {});
-        renderChart('chamadosPorTipoChart', 'doughnut', { labels: Object.keys(porTipo), datasets: [{ data: Object.values(porTipo), backgroundColor: chartColors, borderWidth: 0 }] }, chartOptions(localStorage.getItem('theme') !== 'light'));
-        const porStatus = chamados.reduce((acc, c) => { acc[c.status] = (acc[c.status] || 0) + 1; return acc; }, {});
-        const statusColors = {'Pendente': '#ef4444', 'Em Andamento': '#f97316', 'Resolvido': '#22c55e'};
-        renderChart('distribuicaoStatusChart', 'doughnut', { labels: Object.keys(porStatus), datasets: [{ data: Object.values(porStatus), backgroundColor: Object.keys(porStatus).map(status => statusColors[status]), borderWidth: 0 }] }, chartOptions(localStorage.getItem('theme') !== 'light'));
-        const volumePorDia = chamados.reduce((acc, c) => { const data = new Date(c.dataAbertura).toLocaleDateString('pt-BR'); acc[data] = (acc[data] || 0) + 1; return acc; }, {});
-        const sortedVolume = Object.entries(volumePorDia).sort((a,b) => new Date(a[0].split('/').reverse().join('-')) - new Date(b[0].split('/').reverse().join('-')));
-        renderChart('volumeChamadosChart', 'bar', { labels: sortedVolume.map(item => item[0]), datasets: [{ label: 'Chamados Abertos', data: sortedVolume.map(item => item[1]), backgroundColor: '#00d4ff' }] }, { ...chartOptions(localStorage.getItem('theme') !== 'light'), scales: { x: { ticks: { color: localStorage.getItem('theme') === 'light' ? '#475569' : '#e2e8f0' } }, y: { ticks: { color: localStorage.getItem('theme') === 'light' ? '#475569' : '#e2e8f0' } } } });
-        const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-        const resPorDia = Array(7).fill(0);
-        resolvidos.forEach(c => { const dia = new Date(c.dataConclusao).getDay(); resPorDia[dia]++; });
-        renderChart('resolucaoPorDiaChart', 'bar', { labels: diasSemana, datasets: [{ label: 'Chamados Resolvidos', data: resPorDia, backgroundColor: 'rgba(255, 107, 53, 0.7)' }] }, { ...chartOptions(localStorage.getItem('theme') !== 'light'), scales: { x: { ticks: { color: localStorage.getItem('theme') === 'light' ? '#475569' : '#e2e8f0' } }, y: { ticks: { color: localStorage.getItem('theme') === 'light' ? '#475569' : '#e2e8f0' } } } });
-    };
+    const renderDashboard = (chamados) => { const resolvidos = chamados.filter(c => c.status === 'Resolvido'); const pendentes = chamados.filter(c => c.status !== 'Resolvido'); document.getElementById('kpiTotalChamados').textContent = chamados.length; document.getElementById('kpiResolvidos').textContent = resolvidos.length; document.getElementById('kpiPendentes').textContent = pendentes.length; const tempos = resolvidos.map(c => calculateResolutionTime(c.dataAbertura, c.dataConclusao, true)).filter(t => t !== null); const tempoMedio = tempos.length > 0 ? (tempos.reduce((a, b) => a + b, 0) / tempos.length).toFixed(1) : 0; document.getElementById('kpiTempoMedio').textContent = `${tempoMedio} dias`; const renderChart = (id, type, data, options) => { if (charts[id]) charts[id].destroy(); const ctx = document.getElementById(id); if (ctx) { charts[id] = new Chart(ctx.getContext('2d'), { type, data, options }); } }; const chartColors = ['#00d4ff', '#ff6b35', '#22c55e', '#facc15', '#a855f7', '#ec4899']; const chartOptions = (isDarkMode) => ({ responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: isDarkMode ? '#e2e8f0' : '#475569' } } } }); const porTipo = chamados.reduce((acc, c) => { acc[c.tipo] = (acc[c.tipo] || 0) + 1; return acc; }, {}); renderChart('chamadosPorTipoChart', 'doughnut', { labels: Object.keys(porTipo), datasets: [{ data: Object.values(porTipo), backgroundColor: chartColors, borderWidth: 0 }] }, chartOptions(localStorage.getItem('theme') !== 'light')); const porStatus = chamados.reduce((acc, c) => { acc[c.status] = (acc[c.status] || 0) + 1; return acc; }, {}); const statusColors = {'Pendente': '#ef4444', 'Em Andamento': '#f97316', 'Resolvido': '#22c55e'}; renderChart('distribuicaoStatusChart', 'doughnut', { labels: Object.keys(porStatus), datasets: [{ data: Object.values(porStatus), backgroundColor: Object.keys(porStatus).map(status => statusColors[status]), borderWidth: 0 }] }, chartOptions(localStorage.getItem('theme') !== 'light')); const volumePorDia = chamados.reduce((acc, c) => { const data = new Date(c.dataAbertura).toLocaleDateString('pt-BR'); acc[data] = (acc[data] || 0) + 1; return acc; }, {}); const sortedVolume = Object.entries(volumePorDia).sort((a,b) => new Date(a[0].split('/').reverse().join('-')) - new Date(b[0].split('/').reverse().join('-'))); renderChart('volumeChamadosChart', 'bar', { labels: sortedVolume.map(item => item[0]), datasets: [{ label: 'Chamados Abertos', data: sortedVolume.map(item => item[1]), backgroundColor: '#00d4ff' }] }, { ...chartOptions(localStorage.getItem('theme') !== 'light'), scales: { x: { ticks: { color: localStorage.getItem('theme') === 'light' ? '#475569' : '#e2e8f0' } }, y: { ticks: { color: localStorage.getItem('theme') === 'light' ? '#475569' : '#e2e8f0' } } } }); const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']; const resPorDia = Array(7).fill(0); resolvidos.forEach(c => { const dia = new Date(c.dataConclusao).getDay(); resPorDia[dia]++; }); renderChart('resolucaoPorDiaChart', 'bar', { labels: diasSemana, datasets: [{ label: 'Chamados Resolvidos', data: resPorDia, backgroundColor: 'rgba(255, 107, 53, 0.7)' }] }, { ...chartOptions(localStorage.getItem('theme') !== 'light'), scales: { x: { ticks: { color: localStorage.getItem('theme') === 'light' ? '#475569' : '#e2e8f0' } }, y: { ticks: { color: localStorage.getItem('theme') === 'light' ? '#475569' : '#e2e8f0' } } } }); };
 
+    // CORREÇÃO: Lógica de filtros ajustada para usar as variáveis corretas.
     const applyFiltersAndRender = () => {
         let filteredChamados = [...allChamados];
-        const searchTerm = searchChamadoInput.value.toLowerCase();
+        const codigoSearchTerm = searchCodigoChamadoInput.value.toLowerCase();
+        const clienteSearchTerm = searchChamadoInput.value.toLowerCase();
         const tipoFilter = filterTipo.value;
         const statusFilter = filterStatus.value;
-        if (searchTerm) filteredChamados = filteredChamados.filter(c => c.nomeCliente.toLowerCase().includes(searchTerm));
-        if (tipoFilter !== 'todos') filteredChamados = filteredChamados.filter(c => c.tipo === tipoFilter);
-        if (statusFilter !== 'todos') filteredChamados = filteredChamados.filter(c => c.status === statusFilter);
+    
+        if (codigoSearchTerm) {
+            filteredChamados = filteredChamados.filter(c => c.codigoChamado && c.codigoChamado.toLowerCase().includes(codigoSearchTerm));
+        }
+        if (clienteSearchTerm) {
+            filteredChamados = filteredChamados.filter(c => c.nomeCliente.toLowerCase().includes(clienteSearchTerm));
+        }
+        if (tipoFilter !== 'todos') {
+            filteredChamados = filteredChamados.filter(c => c.tipo === tipoFilter);
+        }
+        if (statusFilter !== 'todos') {
+            filteredChamados = filteredChamados.filter(c => c.status === statusFilter);
+        }
+    
         const sorted = filteredChamados.sort((a,b) => new Date(b.dataAbertura) - new Date(a.dataAbertura));
         renderChamadosView(sorted);
         renderKanbanView(sorted);
@@ -330,9 +329,33 @@
         renderDashboard(dashboardChamados);
     };
     
-    const loadData = async () => { try { const chamados = await api.getChamados(); allChamados = chamados.list || []; applyFiltersAndRender(); } catch (error) { console.error("Erro ao carregar dados:", error); } };
+    const loadData = async () => {
+        const icon = updateListBtn.querySelector('svg');
+        icon.classList.add('animate-spin');
+        try {
+            const chamados = await api.getChamados();
+            allChamados = chamados.list || [];
+            applyFiltersAndRender();
+        } catch (error) {
+            console.error("Erro ao carregar dados:", error);
+        } finally {
+            setTimeout(() => icon.classList.remove('animate-spin'), 500);
+        }
+    };
     
-    const switchView = (view) => { if (view === 'list') { listViewContainer.classList.remove('hidden'); kanbanViewContainer.classList.add('hidden'); viewListBtn.classList.add('view-btn-active'); viewKanbanBtn.classList.remove('view-btn-active'); } else { listViewContainer.classList.add('hidden'); kanbanViewContainer.classList.remove('hidden'); viewListBtn.classList.remove('view-btn-active'); viewKanbanBtn.classList.add('view-btn-active'); } };
+    const switchView = (view) => {
+        if (view === 'list') {
+            listViewContainer.classList.remove('hidden');
+            kanbanViewContainer.classList.add('hidden');
+            viewListBtn.classList.add('view-btn-active');
+            viewKanbanBtn.classList.remove('view-btn-active');
+        } else {
+            listViewContainer.classList.add('hidden');
+            kanbanViewContainer.classList.remove('hidden');
+            viewListBtn.classList.remove('view-btn-active');
+            viewKanbanBtn.classList.add('view-btn-active');
+        }
+    };
     
     const switchPage = (pageId) => {
         ['Atendente', 'Chamados', 'Dashboard'].forEach(p => {
@@ -404,7 +427,15 @@
             const id = parseInt(e.target.dataset.id);
             const newStatus = e.target.value;
             try {
-                await api.patchChamado(id, { status: newStatus });
+                const dataToUpdate = { status: newStatus };
+                const chamadoAtual = allChamados.find(c => c.id === id);
+                if (newStatus === 'Resolvido' && !chamadoAtual.dataConclusao) {
+                    dataToUpdate.dataConclusao = new Date().toISOString();
+                }
+                if (newStatus !== 'Resolvido') {
+                    dataToUpdate.dataConclusao = null;
+                }
+                await api.patchChamado(id, dataToUpdate);
                 await loadData();
             } catch (error) {
                 console.error("Erro ao atualizar status:", error);
@@ -485,7 +516,7 @@
 
     themeToggleBtn.addEventListener('click', () => applyTheme(localStorage.getItem('theme') === 'dark' ? 'light' : 'dark'));
 
-    [searchChamadoInput, filterTipo, filterStatus, dashboardFilterStartDate, dashboardFilterEndDate].forEach(el => el.addEventListener('input', applyFiltersAndRender));
+    [searchCodigoChamadoInput, searchChamadoInput, filterTipo, filterStatus, dashboardFilterStartDate, dashboardFilterEndDate].forEach(el => el.addEventListener('input', applyFiltersAndRender));
     
     dashboardFilterButtons.addEventListener('click', (e) => {
         const btn = e.target.closest('button');
@@ -495,9 +526,11 @@
         const period = btn.dataset.period;
         const endDate = new Date();
         let startDate = new Date();
-        if(period === 'today') startDate.setDate(endDate.getDate());
-        if(period === 'week') startDate.setDate(endDate.getDate() - 7);
-        if(period === 'month') startDate.setDate(endDate.getDate() - 30);
+        if(period === 'week') {
+            startDate.setDate(endDate.getDate() - 6);
+        } else if(period === 'month') {
+            startDate.setDate(endDate.getDate() - 29);
+        }
         dashboardFilterStartDate.value = startDate.toISOString().split('T')[0];
         dashboardFilterEndDate.value = endDate.toISOString().split('T')[0];
         applyFiltersAndRender();
@@ -548,7 +581,12 @@
         doc.autoTable({
             startY: 80,
             head: [['Cód.', 'Cliente', 'Tipo', 'Abertura', 'Status', 'Resolução (dias)']],
-            body: filteredData.map(c => [ c.codigoChamado, c.nomeCliente, c.tipo, new Date(c.dataAbertura).toLocaleDateString('pt-BR'), c.status, calculateResolutionTime(c.dataAbertura, c.dataConclusao) ]),
+            body: filteredData.map(c => [
+                c.codigoChamado, c.nomeCliente, c.tipo,
+                new Date(c.dataAbertura).toLocaleDateString('pt-BR'),
+                c.status,
+                calculateResolutionTime(c.dataAbertura, c.dataConclusao)
+            ]),
             theme: 'grid'
         });
         doc.save(`relatorio-chamados-${new Date().toISOString().split('T')[0]}.pdf`);
@@ -556,9 +594,21 @@
 
     reiniciarChatBtn.addEventListener('click', () => {
         const iframe = document.getElementById('typebot-iframe');
-        if(iframe) {
+        if (iframe) {
             iframe.src = iframe.src;
         }
+    });
+
+    const clearFilters = () => {
+        searchCodigoChamadoInput.value = '';
+        searchChamadoInput.value = '';
+        filterTipo.value = 'todos';
+        filterStatus.value = 'todos';
+    };
+    
+    updateListBtn.addEventListener('click', () => {
+        clearFilters();
+        loadData();
     });
 
     applyTheme(localStorage.getItem('theme') || 'dark');
@@ -566,28 +616,52 @@
     switchPage('Atendente');
     
     let draggedCard = null;
-    kanbanViewContainer.addEventListener('dragstart', (e) => { if (e.target.classList.contains('kanban-card')) { draggedCard = e.target; e.dataTransfer.setData('text/plain', e.target.dataset.id); setTimeout(() => e.target.classList.add('dragging'), 0); } });
-    kanbanViewContainer.addEventListener('dragend', (e) => { if (draggedCard) { draggedCard.classList.remove('dragging'); draggedCard = null; } });
+    kanbanViewContainer.addEventListener('dragstart', (e) => {
+        if (e.target.classList.contains('kanban-card')) {
+            draggedCard = e.target;
+            e.dataTransfer.setData('text/plain', e.target.dataset.id);
+            setTimeout(() => e.target.classList.add('dragging'), 0);
+        }
+    });
+    kanbanViewContainer.addEventListener('dragend', (e) => {
+        if (draggedCard) {
+            draggedCard.classList.remove('dragging');
+            draggedCard = null;
+        }
+    });
+    
     [kanbanColPendente, kanbanColAndamento, kanbanColResolvido].forEach(col => {
-        col.parentElement.addEventListener('dragover', (e) => { e.preventDefault(); col.parentElement.classList.add('drag-over'); });
-        col.parentElement.addEventListener('dragleave', (e) => { col.parentElement.classList.remove('drag-over'); });
+        col.parentElement.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            col.parentElement.classList.add('drag-over');
+        });
+        col.parentElement.addEventListener('dragleave', (e) => {
+            col.parentElement.classList.remove('drag-over');
+        });
         col.parentElement.addEventListener('drop', async (e) => {
             e.preventDefault();
             col.parentElement.classList.remove('drag-over');
             const id = parseInt(e.dataTransfer.getData('text/plain'));
             const newStatus = col.parentElement.dataset.status;
             const chamado = allChamados.find(c => c.id === id);
+            
             if (chamado && chamado.status !== newStatus) {
                 try {
-                    await api.patchChamado(id, { status: newStatus });
+                    const dataToUpdate = { status: newStatus };
+                    if (newStatus === 'Resolvido' && !chamado.dataConclusao) {
+                        dataToUpdate.dataConclusao = new Date().toISOString();
+                    }
+                    if (newStatus !== 'Resolvido') {
+                        dataToUpdate.dataConclusao = null;
+                    }
+                    await api.patchChamado(id, dataToUpdate);
                     await loadData();
                 } catch (error) {
-                    console.error("Erro ao mover card:", error);
+                    loadData();
                 }
             }
         });
     });
-
 </script>
 </body>
 </html>
