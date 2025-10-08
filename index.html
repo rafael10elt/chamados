@@ -129,10 +129,12 @@
     let mockChamados = [];
     
     // --- Conexão com NocoDB ---
-    const NOCODB_HOST =  'https://lumitechia-nocodb-portfolio.aeenwc.easypanel.host/';
-        const API_TOKEN = 'hIkGFs24vX_-s2YDrUX0Dnb5D64b_F9t8xE1D6Fp';
+    const NOCODB_HOST = 'https://lumitechia-nocodb-portfolio.aeenwc.easypanel.host/';
+    const NOCODB_TOKEN = 'hIkGFs24vX_-s2YDrUX0Dnb5D64b_F9t8xE1D6Fp';
+    const PROJECT_NAME = 'Portfolio'; 
+    const TABLE_NAME = 'Agendamentos';
     // CORREÇÃO CRÍTICA: Usando o ID da Tabela na URL, conforme exigido pela API.
-    const NOCODB_API_URL = `${NOCODB_HOST}/api/v1/db/data/v1/Portfolio/mlwjbjsc3pk6wtw`;
+    const NOCODB_API_URL = `${NOCODB_HOST}/api/v1/db/data/noco/${PROJECT_NAME}/${TABLE_NAME}`;
 
     const api = {
         async getChamados() {
